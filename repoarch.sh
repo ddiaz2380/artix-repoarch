@@ -9,10 +9,10 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Realizamos una copia de seguridad del archivo /etc/pacman.conf
-cp /etc/pacman.conf /etc/pacman.conf.bak
+sudo cp /etc/pacman.conf /etc/pacman.conf.bak
 
 # Agregamos los repositorios de Arch Linux al final del archivo /etc/pacman.conf
-cat <<EOL >> /etc/pacman.conf
+sudo cat <<EOL >> /etc/pacman.conf
 
 # Repositorios de Arch Linux para Artix Linux
 [universe]
@@ -23,6 +23,15 @@ Server = https://artixlinux.qontinuum.space/artixlinux/universe/os/\$arch
 Server = https://mirror1.cl.netactuate.com/artix/universe/\$arch
 Server = https://ftp.crifo.org/artix-universe/\$arch
 Server = https://artix.sakamoto.pl/universe/\$arch
+
+EOL
+
+# Actualizamos la base de datos de paquetes y el sistema
+sudo pacman -Sy
+sudo pacman -Sy artix-archlinux-support
+
+
+sudo cat <<EOL >> /etc/pacman.conf
 
 # Descomentar las siguientes líneas si es necesario
 #[testing]
@@ -45,11 +54,8 @@ Include = /etc/pacman.d/mirrorlist-arch
 
 EOL
 
-# Actualizamos la base de datos de paquetes y el sistema
-sudo pacman -Sy
-sudo pacman -Syu artix-archlinux-support
-
 # Configuramos las claves de Arch Linux
 sudo pacman-key --populate archlinux
+sudo pacman -Sy
 
 echo "Repositorios de Arch Linux agregados exitosamente."
